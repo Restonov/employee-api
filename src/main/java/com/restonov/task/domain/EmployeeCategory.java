@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Setter
@@ -20,14 +21,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @Table(name = "categories")
-public class EmployeeCategory {
+public class EmployeeCategory implements GrantedAuthority {
+
+  private static final long serialVersionUID = -8009952451001282057L;
 
   @Id
   @Column
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column
+  @Column(unique = true)
   private String name;
 
   @OneToOne(mappedBy = "category")
@@ -55,5 +58,10 @@ public class EmployeeCategory {
     int result = (int) (id ^ (id >>> 32));
     result = 31 * result + (name != null ? name.hashCode() : 0);
     return result;
+  }
+
+  @Override
+  public String getAuthority() {
+    return name;
   }
 }

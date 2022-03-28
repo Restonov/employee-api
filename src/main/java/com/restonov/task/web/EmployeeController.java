@@ -22,13 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/employees", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/employees", produces = APPLICATION_JSON_VALUE)
 public class EmployeeController {
 
   private final EmployeeService employeeService;
   private final EmployeeMapper mapper;
 
   @PostMapping(consumes = APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
   public EmployeeDto createEmployee(@RequestBody EmployeeDto dto) {
     Employee employee = employeeService.create(mapper.dtoToEntity(dto));
     return mapper.entityToDto(employee);

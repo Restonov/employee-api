@@ -1,6 +1,8 @@
 package com.restonov.task.domain;
 
 import java.util.Collection;
+import java.util.Collections;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,9 +23,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @ToString
+@Builder
 @Entity
 @Table(name = "employees")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Employee implements UserDetails {
+
+  private static final long serialVersionUID = 2456937460041489613L;
 
   @Id
   @Column
@@ -33,18 +43,18 @@ public class Employee implements UserDetails {
   @Column
   private String password;
 
-  @OneToOne
+  @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private EmployeeCategory category;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
+    return Collections.singletonList(category);
   }
 
   @Override
   public String getPassword() {
-    return null;
+    return password;
   }
 
   @Override
@@ -54,22 +64,22 @@ public class Employee implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    return false;
+    return true;
   }
 
   @Override
   public boolean isEnabled() {
-    return false;
+    return true;
   }
 
   @Override

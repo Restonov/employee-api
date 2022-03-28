@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/categories", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/categories", produces = APPLICATION_JSON_VALUE)
 public class EmployeeCategoryController {
 
   private final EmployeeCategoryService categoryService;

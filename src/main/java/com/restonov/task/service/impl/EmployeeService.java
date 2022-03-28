@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,17 +42,20 @@ public class EmployeeService implements CrudService<Employee, Long>, UserDetails
   }
 
   @Override
+  @Transactional
   public Employee update(Long id, Employee employee) {
     Optional<Employee> employeeOptional = employeeRepository.findById(id);
     return employeeOptional.map(e -> {
-      employee.setId(id);
-      return employeeRepository.save(employee);
+      e.setName(employee.getName());
+      e.setCategory(employee.getCategory());
+      return employeeRepository.save(e);
     }).orElseThrow(() -> {
       throw new ServiceException(String.format(EMPLOYEE_IS_NOT_FOUND, id));
     });
   }
 
   @Override
+  @Transactional
   public void delete(Long id) {
     Optional<Employee> employeeOptional = employeeRepository.findById(id);
     employeeOptional.ifPresentOrElse(employeeRepository::delete,
